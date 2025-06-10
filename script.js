@@ -10,9 +10,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Check if the library is loaded
     if (typeof window.backgroundRemoval === 'undefined') {
+        console.error('Background removal library is not loaded');
         alert('Error: Background removal library is not loaded. Please refresh the page and try again.');
         return;
     }
+
+    console.log('Application initialized successfully');
 
     // Handle drag and drop events
     dropZone.addEventListener('dragover', (e) => {
@@ -30,8 +33,10 @@ document.addEventListener('DOMContentLoaded', () => {
         dropZone.style.borderColor = '#ccc';
         const file = e.dataTransfer.files[0];
         if (file && file.type.startsWith('image/')) {
+            console.log('File dropped:', file.name, file.type);
             handleImage(file);
         } else {
+            console.warn('Invalid file type dropped');
             alert('Please upload a valid image file.');
         }
     });
@@ -45,8 +50,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const file = e.target.files[0];
         if (file) {
             if (file.type.startsWith('image/')) {
+                console.log('File selected:', file.name, file.type);
                 handleImage(file);
             } else {
+                console.warn('Invalid file type selected');
                 alert('Please upload a valid image file.');
             }
         }
@@ -55,32 +62,39 @@ document.addEventListener('DOMContentLoaded', () => {
     // Handle image processing
     async function handleImage(file) {
         try {
+            console.log('Starting image processing');
             loading.style.display = 'block';
             dropZone.style.display = 'none';
 
             // Display original image
             const originalUrl = URL.createObjectURL(file);
             originalImage.src = originalUrl;
+            console.log('Original image displayed');
 
             // Convert file to blob URL
             const blob = new Blob([await file.arrayBuffer()], { type: file.type });
             const blobUrl = URL.createObjectURL(blob);
+            console.log('Image converted to blob');
 
             // Process image using background-removal
+            console.log('Starting background removal');
             const processedBlob = await window.backgroundRemoval.removeBackground(blobUrl, {
                 progress: (key, current, total) => {
                     console.log(`Processing ${key}: ${current} of ${total}`);
                 }
             });
+            console.log('Background removal completed');
 
             const processedUrl = URL.createObjectURL(processedBlob);
             processedImage.src = processedUrl;
+            console.log('Processed image displayed');
 
             // Show preview container
             previewContainer.style.display = 'block';
 
             // Setup download button
             downloadBtn.onclick = () => {
+                console.log('Downloading processed image');
                 const link = document.createElement('a');
                 link.href = processedUrl;
                 link.download = 'processed-image.png';
@@ -101,6 +115,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Handle reset button
     resetBtn.addEventListener('click', () => {
+        console.log('Resetting application state');
         previewContainer.style.display = 'none';
         dropZone.style.display = 'block';
         fileInput.value = '';
