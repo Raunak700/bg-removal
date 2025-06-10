@@ -1,0 +1,13 @@
+{
+  "name": "background-removal-app",
+  "version": "1.0.0",
+  "description": "A web application for removing image backgrounds",
+  "main": "index.html",
+  "scripts": {
+    "start": "serve ."
+  },
+  "dependencies": {
+    "@imgly/background-removal": "^1.0.0",
+    "serve": "^14.2.1"
+  }
+} 
