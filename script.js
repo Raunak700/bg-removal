@@ -8,6 +8,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const resetBtn = document.getElementById('resetBtn');
     const loading = document.getElementById('loading');
 
+    // Check if the library is loaded
+    if (typeof window.backgroundRemoval === 'undefined') {
+        alert('Error: Background removal library is not loaded. Please refresh the page and try again.');
+        return;
+    }
+
     // Handle drag and drop events
     dropZone.addEventListener('dragover', (e) => {
         e.preventDefault();
@@ -25,6 +31,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const file = e.dataTransfer.files[0];
         if (file && file.type.startsWith('image/')) {
             handleImage(file);
+        } else {
+            alert('Please upload a valid image file.');
         }
     });
 
@@ -36,7 +44,11 @@ document.addEventListener('DOMContentLoaded', () => {
     fileInput.addEventListener('change', (e) => {
         const file = e.target.files[0];
         if (file) {
-            handleImage(file);
+            if (file.type.startsWith('image/')) {
+                handleImage(file);
+            } else {
+                alert('Please upload a valid image file.');
+            }
         }
     });
 
@@ -55,9 +67,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const blobUrl = URL.createObjectURL(blob);
 
             // Process image using background-removal
-            const processedBlob = await backgroundRemoval.removeBackground(blobUrl, {
+            const processedBlob = await window.backgroundRemoval.removeBackground(blobUrl, {
                 progress: (key, current, total) => {
-                    console.log(`Downloading ${key}: ${current} of ${total}`);
+                    console.log(`Processing ${key}: ${current} of ${total}`);
                 }
             });
 

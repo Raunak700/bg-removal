@@ -49,8 +49,13 @@
     </div>
     <script src="https://unpkg.com/@imgly/background-removal@1.0.0/dist/index.umd.js"></script>
     <script>
-        // Initialize the background removal library
-        window.backgroundRemoval = window.backgroundRemoval || {};
+        // Wait for the library to load
+        window.addEventListener('load', function() {
+            if (typeof window.backgroundRemoval === 'undefined') {
+                console.error('Background removal library failed to load');
+                alert('Error: Background removal library failed to load. Please refresh the page and try again.');
+            }
+        });
     </script>
     <script src="script.js"></script>
 </body>
