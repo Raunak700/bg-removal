@@ -50,8 +50,17 @@ document.addEventListener('DOMContentLoaded', () => {
             const originalUrl = URL.createObjectURL(file);
             originalImage.src = originalUrl;
 
+            // Convert file to blob URL
+            const blob = new Blob([await file.arrayBuffer()], { type: file.type });
+            const blobUrl = URL.createObjectURL(blob);
+
             // Process image using background-removal
-            const processedBlob = await backgroundRemoval.removeBackground(file);
+            const processedBlob = await backgroundRemoval.removeBackground(blobUrl, {
+                progress: (key, current, total) => {
+                    console.log(`Downloading ${key}: ${current} of ${total}`);
+                }
+            });
+
             const processedUrl = URL.createObjectURL(processedBlob);
             processedImage.src = processedUrl;
 
@@ -68,7 +77,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
         } catch (error) {
             console.error('Error processing image:', error);
-            alert('Error processing image. Please try again.');
+            alert('Error processing image. Please make sure the image is valid and try again. Error: ' + error.message);
+            // Reset the UI
+            loading.style.display = 'none';
+            dropZone.style.display = 'block';
+            previewContainer.style.display = 'none';
         } finally {
             loading.style.display = 'none';
         }
