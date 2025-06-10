@@ -81,6 +81,11 @@ document.addEventListener('DOMContentLoaded', () => {
             const processedBlob = await window.backgroundRemoval.removeBackground(blobUrl, {
                 progress: (key, current, total) => {
                     console.log(`Processing ${key}: ${current} of ${total}`);
+                },
+                model: 'medium', // Use medium model for better performance
+                output: {
+                    format: 'png',
+                    quality: 0.8
                 }
             });
             console.log('Background removal completed');
