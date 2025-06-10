@@ -1,4 +1,5 @@
-document.addEventListener('DOMContentLoaded', () => {
+// Initialize the application
+function initApp() {
     const dropZone = document.getElementById('dropZone');
     const fileInput = document.getElementById('fileInput');
     const previewContainer = document.getElementById('previewContainer');
@@ -82,7 +83,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 progress: (key, current, total) => {
                     console.log(`Processing ${key}: ${current} of ${total}`);
                 },
-                model: 'medium', // Use medium model for better performance
+                model: 'medium',
                 output: {
                     format: 'png',
                     quality: 0.8
@@ -127,4 +128,7 @@ document.addEventListener('DOMContentLoaded', () => {
         originalImage.src = '';
         processedImage.src = '';
     });
-}); 
+}
+
+// Start the application when the DOM is loaded
+document.addEventListener('DOMContentLoaded', initApp); 

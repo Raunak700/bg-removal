@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Background Removal Tool</title>
     <link rel="stylesheet" href="styles.css">
+    <!-- Load the library in the head -->
+    <script src="https://unpkg.com/@imgly/background-removal@1.0.0/dist/index.umd.min.js"></script>
 </head>
 <body>
     <div class="container">
@@ -48,49 +50,34 @@
         </main>
     </div>
 
-    <!-- Load the library -->
     <script>
-        // Function to load the library
-        function loadLibrary() {
-            return new Promise((resolve, reject) => {
+        // Check if the library is loaded
+        window.addEventListener('load', function() {
+            if (typeof window.backgroundRemoval === 'undefined') {
+                console.error('Background removal library failed to load');
+                // Try loading from alternative source
                 const script = document.createElement('script');
-                script.src = 'https://cdn.jsdelivr.net/npm/@imgly/background-removal@0.1.0/dist/index.umd.js';
-                script.onload = () => {
-                    console.log('Library loaded successfully');
-                    resolve();
+                script.src = 'https://cdn.jsdelivr.net/npm/@imgly/background-removal@1.0.0/dist/index.umd.min.js';
+                script.onload = function() {
+                    console.log('Library loaded from alternative source');
+                    // Load the main script after library is loaded
+                    const appScript = document.createElement('script');
+                    appScript.src = 'script.js';
+                    document.body.appendChild(appScript);
                 };
-                script.onerror = () => {
-                    console.error('Failed to load library from primary source');
-                    // Try fallback
-                    const fallbackScript = document.createElement('script');
-                    fallbackScript.src = 'https://unpkg.com/@imgly/background-removal@0.1.0/dist/index.umd.js';
-                    fallbackScript.onload = () => {
-                        console.log('Library loaded successfully from fallback');
-                        resolve();
-                    };
-                    fallbackScript.onerror = () => {
-                        console.error('Failed to load library from fallback');
-                        reject(new Error('Failed to load background removal library'));
-                    };
-                    document.body.appendChild(fallbackScript);
+                script.onerror = function() {
+                    console.error('Failed to load library from alternative source');
+                    alert('Error: Failed to load the background removal library. Please check your internet connection and refresh the page.');
                 };
                 document.body.appendChild(script);
-            });
-        }
-
-        // Load the library and initialize the app
-        loadLibrary()
-            .then(() => {
-                console.log('Library loaded, initializing app...');
-                // Load the main script after library is loaded
+            } else {
+                console.log('Library loaded successfully');
+                // Load the main script
                 const appScript = document.createElement('script');
                 appScript.src = 'script.js';
                 document.body.appendChild(appScript);
-            })
-            .catch(error => {
-                console.error('Error loading library:', error);
-                alert('Error: Failed to load the background removal library. Please refresh the page and try again.');
-            });
+            }
+        });
     </script>
 </body>
 </html> 
